@@ -29,7 +29,7 @@ public class CSV {
     }
     
     public convenience init?(contentsOfURL url: NSURL, delimiter: NSCharacterSet, encoding: UInt, error: NSErrorPointer) {
-        let csvString = String(contentsOfURL: url, encoding: encoding, error: error);
+        let csvString = try! String(contentsOfURL: url, encoding: encoding)
         self.init(content: csvString,delimiter:delimiter, encoding:encoding, error: error)
     }
     
@@ -50,14 +50,14 @@ public class CSV {
     func parseRows(fromLines lines: [String]) -> [Dictionary<String, String>] {
         var rows: [Dictionary<String, String>] = []
         
-        for (lineNumber, line) in enumerate(lines) {
+        for (lineNumber, line) in lines.enumerate() {
             if lineNumber == 0 {
                 continue
             }
             
             var row = Dictionary<String, String>()
             let values = line.componentsSeparatedByCharactersInSet(self.delimiter)
-            for (index, header) in enumerate(self.headers) {
+            for (index, header) in self.headers.enumerate() {
                 if index < values.count {
                     row[header] = values[index]
                 } else {
